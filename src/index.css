@@ -1,7 +1,24 @@
 @import "tailwindcss";
 
+@theme {
+  --color-accent: #2b7bff;
+  --color-accent-hover: #1a68ea;
+  --color-accent-soft: #e8f1ff;
+  --color-surface: #ffffff;
+  --color-sidebar: #f7f8fa;
+  --color-chat-bg: #eef1f6;
+  --color-line: #e3e6eb;
+  --color-muted: #8a919c;
+  --color-bubble-out: #d9e8ff;
+  --color-bubble-in: #ffffff;
+}
+
 html,
 body,
 #root {
   height: 100%;
+}
+
+body {
+  @apply bg-chat-bg text-[15px] text-neutral-900 antialiased;
 }
