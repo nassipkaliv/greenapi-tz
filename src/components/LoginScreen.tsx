@@ -12,7 +12,7 @@ function guessApiUrl(idInstance: string): string {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-line bg-sidebar px-4 py-3 outline-none transition focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/10";
+  "w-full rounded-xl border border-line bg-hover px-4 py-3 outline-none transition focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/10";
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
   const [idInstance, setIdInstance] = useState("");

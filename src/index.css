@@ -1,16 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: #2b7bff;
-  --color-accent-hover: #1a68ea;
-  --color-accent-soft: #e8f1ff;
+  --font-sans: "Roboto", -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+
+  --color-accent: #3390ec;
+  --color-accent-hover: #2b82d8;
   --color-surface: #ffffff;
-  --color-sidebar: #f7f8fa;
-  --color-chat-bg: #eef1f6;
-  --color-line: #e3e6eb;
-  --color-muted: #8a919c;
-  --color-bubble-out: #d9e8ff;
+  --color-hover: #f4f4f5;
+  --color-line: #dadce0;
+  --color-muted: #707579;
+  --color-green: #4fae4e;
+  --color-bubble-out: #eeffde;
   --color-bubble-in: #ffffff;
+}
+
+@utility chat-wallpaper {
+  background-color: #a4c49a;
+  background-image:
+    radial-gradient(circle at 0% 0%, #dbddbb 0%, transparent 55%),
+    radial-gradient(circle at 100% 15%, #6ba587 0%, transparent 55%),
+    radial-gradient(circle at 15% 100%, #d5d88d 0%, transparent 55%),
+    radial-gradient(circle at 100% 100%, #88b884 0%, transparent 55%);
 }
 
 html,
@@ -20,5 +30,5 @@ body,
 }
 
 body {
-  @apply bg-chat-bg text-[15px] text-neutral-900 antialiased;
+  @apply bg-surface font-sans text-[15px] text-black antialiased;
 }

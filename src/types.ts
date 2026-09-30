@@ -22,4 +22,5 @@ export interface Chat {
   remoteId?: string;
   messages: Message[];
   unread: number;
+  createdAt: number;
 }
