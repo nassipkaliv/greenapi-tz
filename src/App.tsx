@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { ChatWindow } from "./components/ChatWindow";
 import { LoginScreen } from "./components/LoginScreen";
+import { Sidebar } from "./components/Sidebar";
 import { clearCredentials, loadCredentials, saveCredentials } from "./lib/storage";
+import { ChatProvider } from "./store/ChatProvider";
 import type { Credentials } from "./types";
 
 export default function App() {
@@ -21,14 +24,11 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4">
-      <p>Вы вошли в инстанс {credentials.idInstance}</p>
-      <button
-        onClick={handleLogout}
-        className="rounded-xl bg-accent px-4 py-2 text-white hover:bg-accent-hover"
-      >
-        Выйти
-      </button>
-    </div>
+    <ChatProvider key={credentials.idInstance} credentials={credentials}>
+      <div className="flex h-full">
+        <Sidebar onLogout={handleLogout} />
+        <ChatWindow />
+      </div>
+    </ChatProvider>
   );
 }
