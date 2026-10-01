@@ -8,19 +8,55 @@
   --color-surface: #ffffff;
   --color-hover: #f4f4f5;
   --color-line: #dadce0;
+  --color-text: #000000;
   --color-muted: #707579;
   --color-green: #4fae4e;
+  --color-link: #3390ec;
+  --color-link-out: #3390ec;
   --color-bubble-out: #eeffde;
   --color-bubble-in: #ffffff;
+  --color-meta-out: #4fae4e;
+}
+
+:root {
+  color-scheme: light;
+  --wallpaper-base: #a4c49a;
+  --wallpaper-1: #dbddbb;
+  --wallpaper-2: #6ba587;
+  --wallpaper-3: #d5d88d;
+  --wallpaper-4: #88b884;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-accent: #8774e1;
+    --color-accent-hover: #7b67d9;
+    --color-surface: #212121;
+    --color-hover: #2c2c2c;
+    --color-line: #3a3a3a;
+    --color-text: #ffffff;
+    --color-muted: #aaaaaa;
+    --color-link: #a99cf0;
+    --color-link-out: #ffffff;
+    --color-bubble-out: #766ac8;
+    --color-bubble-in: #212121;
+    --color-meta-out: rgb(255 255 255 / 0.6);
+    --wallpaper-base: #0f0f0f;
+    --wallpaper-1: #1f2a24;
+    --wallpaper-2: #14201a;
+    --wallpaper-3: #232a1c;
+    --wallpaper-4: #182419;
+  }
 }
 
 @utility chat-wallpaper {
-  background-color: #a4c49a;
+  background-color: var(--wallpaper-base);
   background-image:
-    radial-gradient(circle at 0% 0%, #dbddbb 0%, transparent 55%),
-    radial-gradient(circle at 100% 15%, #6ba587 0%, transparent 55%),
-    radial-gradient(circle at 15% 100%, #d5d88d 0%, transparent 55%),
-    radial-gradient(circle at 100% 100%, #88b884 0%, transparent 55%);
+    radial-gradient(circle at 0% 0%, var(--wallpaper-1) 0%, transparent 55%),
+    radial-gradient(circle at 100% 15%, var(--wallpaper-2) 0%, transparent 55%),
+    radial-gradient(circle at 15% 100%, var(--wallpaper-3) 0%, transparent 55%),
+    radial-gradient(circle at 100% 100%, var(--wallpaper-4) 0%, transparent 55%);
 }
 
 html,
@@ -30,5 +66,5 @@ body,
 }
 
 body {
-  @apply bg-surface font-sans text-[15px] text-black antialiased;
+  @apply bg-surface font-sans text-[15px] text-text antialiased;
 }

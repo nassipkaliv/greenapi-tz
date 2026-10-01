@@ -9,6 +9,7 @@ export interface ChatContextValue {
   connection: ConnectionStatus;
   createChat: (phone: string, name?: string) => void;
   selectChat: (chatId: string | null) => void;
+  deleteChat: (chatId: string) => void;
   sendText: (chat: Chat, text: string) => void;
   retry: (chat: Chat, message: Message) => void;
 }

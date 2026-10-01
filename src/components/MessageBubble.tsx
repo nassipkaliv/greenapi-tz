@@ -2,6 +2,7 @@ import { formatTime } from "../lib/format";
 import type { Message } from "../types";
 import { AlertIcon } from "./icons";
 import { MessageStatusIcon } from "./MessageStatusIcon";
+import { MessageText } from "./MessageText";
 
 interface MessageBubbleProps {
   message: Message;
@@ -50,12 +51,12 @@ export function MessageBubble({ message, first, last, onRetry }: MessageBubblePr
         }`}
       >
         <p className="leading-snug break-words whitespace-pre-wrap">
-          {message.text}
-          <span className={`inline-block ${outgoing ? "w-15" : "w-11"}`} />
+          <MessageText text={message.text} outgoing={outgoing} />
+          <span className={`inline-block ${outgoing ? "w-16" : "w-11"}`} />
         </p>
         <span
           className={`absolute right-2 bottom-1 flex items-center gap-0.5 text-xs ${
-            outgoing ? "text-green" : "text-muted"
+            outgoing ? "text-meta-out" : "text-muted"
           }`}
         >
           {formatTime(message.timestamp)}

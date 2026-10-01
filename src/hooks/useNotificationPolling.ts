@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { deleteNotification, receiveNotification } from "../api/greenApi";
-import { parseIncomingText } from "../lib/notifications";
-import type { Credentials, IncomingText } from "../types";
+import {
+  deleteNotification,
+  getStateInstance,
+  isAuthError,
+  receiveNotification,
+} from "../api/greenApi";
+import { parseNotification } from "../lib/notifications";
+import type { ChatEvent, Credentials } from "../types";
 
 export type ConnectionStatus = "connecting" | "online" | "offline";
 
 const RETRY_DELAY_MS = 3000;
+
+interface PollingHandlers {
+  onEvent: (event: ChatEvent) => void;
+  onUnauthorized: () => void;
+}
 
 function wait(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve) => {
@@ -23,32 +33,44 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
 
 export function useNotificationPolling(
   credentials: Credentials,
-  onIncoming: (incoming: IncomingText) => void,
+  handlers: PollingHandlers,
 ): ConnectionStatus {
   const [status, setStatus] = useState<ConnectionStatus>("connecting");
-  const onIncomingRef = useRef(onIncoming);
+  const handlersRef = useRef(handlers);
 
   useEffect(() => {
-    onIncomingRef.current = onIncoming;
-  }, [onIncoming]);
+    handlersRef.current = handlers;
+  }, [handlers]);
 
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
 
     async function poll() {
+      let connected = false;
+
       while (!signal.aborted) {
         try {
+          if (!connected) {
+            await getStateInstance(credentials, signal);
+            connected = true;
+            setStatus("online");
+          }
+
           const notification = await receiveNotification(credentials, signal);
-          setStatus("online");
           if (!notification) continue;
 
-          const incoming = parseIncomingText(notification.body);
-          if (incoming) onIncomingRef.current(incoming);
+          const event = parseNotification(notification.body);
+          if (event) handlersRef.current.onEvent(event);
 
           await deleteNotification(credentials, notification.receiptId, signal);
-        } catch {
+        } catch (error) {
           if (signal.aborted) return;
+          if (isAuthError(error)) {
+            handlersRef.current.onUnauthorized();
+            return;
+          }
+          connected = false;
           setStatus("offline");
           await wait(RETRY_DELAY_MS, signal);
         }

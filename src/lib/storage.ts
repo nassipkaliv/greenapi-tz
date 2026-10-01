@@ -1,6 +1,7 @@
 import type { Chat, Credentials } from "../types";
 
 const CREDENTIALS_KEY = "greenapi:credentials";
+const MAX_STORED_MESSAGES = 500;
 
 export function loadCredentials(): Credentials | null {
   try {
@@ -42,7 +43,11 @@ export function loadChats(idInstance: string): Chat[] {
 
 export function saveChats(idInstance: string, chats: Chat[]): void {
   try {
-    localStorage.setItem(chatsKey(idInstance), JSON.stringify(chats));
+    const trimmed = chats.map((chat) => ({
+      ...chat,
+      messages: chat.messages.slice(-MAX_STORED_MESSAGES),
+    }));
+    localStorage.setItem(chatsKey(idInstance), JSON.stringify(trimmed));
   } catch {
     return;
   }
