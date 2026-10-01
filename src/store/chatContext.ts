@@ -1,5 +1,5 @@
 import { createContext, use } from "react";
-import type { Chat, Credentials } from "../types";
+import type { Chat, Credentials, Message } from "../types";
 
 export interface ChatContextValue {
   credentials: Credentials;
@@ -7,6 +7,8 @@ export interface ChatContextValue {
   activeChat: Chat | null;
   createChat: (phone: string, name?: string) => void;
   selectChat: (chatId: string | null) => void;
+  sendText: (chat: Chat, text: string) => void;
+  retry: (chat: Chat, message: Message) => void;
 }
 
 export const ChatContext = createContext<ChatContextValue | null>(null);

@@ -1,4 +1,4 @@
-import type { Chat } from "../types";
+import type { Chat, Message } from "../types";
 
 export interface ChatState {
   chats: Chat[];
@@ -7,7 +7,16 @@ export interface ChatState {
 
 export type ChatAction =
   | { type: "createChat"; phone: string; name?: string }
-  | { type: "selectChat"; chatId: string | null };
+  | { type: "selectChat"; chatId: string | null }
+  | { type: "addMessage"; chatId: string; message: Message }
+  | { type: "updateMessage"; chatId: string; messageId: string; patch: Partial<Message> };
+
+function updateChat(state: ChatState, chatId: string, update: (chat: Chat) => Chat): ChatState {
+  return {
+    ...state,
+    chats: state.chats.map((chat) => (chat.id === chatId ? update(chat) : chat)),
+  };
+}
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
@@ -34,6 +43,20 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           chat.id === action.chatId && chat.unread > 0 ? { ...chat, unread: 0 } : chat,
         ),
       };
+
+    case "addMessage":
+      return updateChat(state, action.chatId, (chat) => ({
+        ...chat,
+        messages: [...chat.messages, action.message],
+      }));
+
+    case "updateMessage":
+      return updateChat(state, action.chatId, (chat) => ({
+        ...chat,
+        messages: chat.messages.map((message) =>
+          message.id === action.messageId ? { ...message, ...action.patch } : message,
+        ),
+      }));
   }
 }
 

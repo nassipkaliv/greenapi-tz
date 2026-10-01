@@ -5,6 +5,8 @@ import { useChat } from "../store/chatContext";
 import type { Chat } from "../types";
 import { Avatar } from "./Avatar";
 import { BackIcon } from "./icons";
+import { MessageComposer } from "./MessageComposer";
+import { MessageList } from "./MessageList";
 
 interface ChatHeaderProps {
   chat: Chat;
@@ -36,7 +38,7 @@ function ChatHeader({ chat, onBack }: ChatHeaderProps) {
 }
 
 export function ChatWindow() {
-  const { activeChat, selectChat } = useChat();
+  const { activeChat, selectChat, sendText, retry } = useChat();
   const hasActiveChat = activeChat !== null;
 
   useEffect(() => {
@@ -65,12 +67,15 @@ export function ChatWindow() {
   return (
     <section className="flex min-w-0 flex-1 flex-col chat-wallpaper">
       <ChatHeader chat={activeChat} onBack={() => selectChat(null)} />
-      <div className="flex flex-1 items-center justify-center p-4">
-        <div className="max-w-64 rounded-3xl bg-black/20 px-5 py-4 text-center text-white">
-          <p className="font-medium">Здесь пока нет сообщений…</p>
-          <p className="mt-1 text-sm">Отправьте сообщение, чтобы начать переписку.</p>
-        </div>
-      </div>
+      <MessageList
+        key={`list-${activeChat.id}`}
+        messages={activeChat.messages}
+        onRetry={(message) => retry(activeChat, message)}
+      />
+      <MessageComposer
+        key={`composer-${activeChat.id}`}
+        onSend={(text) => sendText(activeChat, text)}
+      />
     </section>
   );
 }
