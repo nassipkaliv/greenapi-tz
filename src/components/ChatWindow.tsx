@@ -30,7 +30,7 @@ function ChatHeader({ chat, onBack }: ChatHeaderProps) {
       <div className="min-w-0">
         <h2 className="truncate leading-tight font-medium">{title}</h2>
         <p className="truncate text-sm text-muted">
-          {chat.name ? formatPhone(chat.phone) : "личный чат"}
+          {chat.name && chat.phone ? formatPhone(chat.phone) : "личный чат"}
         </p>
       </div>
     </header>

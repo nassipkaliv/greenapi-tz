@@ -24,3 +24,12 @@ export interface Chat {
   unread: number;
   createdAt: number;
 }
+
+export interface IncomingText {
+  idMessage: string;
+  chatId: string;
+  phone?: string;
+  name?: string;
+  text: string;
+  timestamp: number;
+}

@@ -11,7 +11,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onLogout }: SidebarProps) {
-  const { credentials, chats, activeChat, selectChat } = useChat();
+  const { credentials, chats, activeChat, connection, selectChat } = useChat();
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -82,6 +82,13 @@ export function Sidebar({ onLogout }: SidebarProps) {
           )}
         </label>
       </header>
+
+      {connection !== "online" && (
+        <div className="flex items-center gap-2 px-5 pb-2 text-sm text-muted">
+          <span className="size-3.5 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          {connection === "connecting" ? "Соединение…" : "Ожидание сети…"}
+        </div>
+      )}
 
       <nav className="flex-1 overflow-y-auto px-2 pb-24">
         {visibleChats.length === 0 ? (

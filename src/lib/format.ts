@@ -45,5 +45,6 @@ export function isSameDay(a: number, b: number): boolean {
 }
 
 export function chatTitle(chat: Chat): string {
-  return chat.name ?? formatPhone(chat.phone);
+  if (chat.name) return chat.name;
+  return chat.phone ? formatPhone(chat.phone) : "Пользователь Telegram";
 }

@@ -1,10 +1,12 @@
 import { createContext, use } from "react";
+import type { ConnectionStatus } from "../hooks/useNotificationPolling";
 import type { Chat, Credentials, Message } from "../types";
 
 export interface ChatContextValue {
   credentials: Credentials;
   chats: Chat[];
   activeChat: Chat | null;
+  connection: ConnectionStatus;
   createChat: (phone: string, name?: string) => void;
   selectChat: (chatId: string | null) => void;
   sendText: (chat: Chat, text: string) => void;

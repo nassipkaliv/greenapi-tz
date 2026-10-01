@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useMemo, useReducer, type ReactNode } from "react";
 import { sendMessage } from "../api/greenApi";
+import { useNotificationPolling } from "../hooks/useNotificationPolling";
 import { phoneToChatId } from "../lib/phone";
 import { loadChats, saveChats } from "../lib/storage";
-import type { Chat, Credentials, Message } from "../types";
+import type { Chat, Credentials, IncomingText, Message } from "../types";
 import { ChatContext, type ChatContextValue } from "./chatContext";
 import { chatReducer, type ChatState } from "./chatReducer";
 
 interface ChatProviderProps {
   credentials: Credentials;
   children: ReactNode;
+}
+
+function recipientOf(chat: Chat): string {
+  return chat.phone ? phoneToChatId(chat.phone) : (chat.remoteId ?? chat.id);
 }
 
 function initState(idInstance: string): ChatState {
@@ -36,10 +41,16 @@ export function ChatProvider({ credentials, children }: ChatProviderProps) {
     dispatch({ type: "selectChat", chatId });
   }, []);
 
+  const handleIncoming = useCallback((incoming: IncomingText) => {
+    dispatch({ type: "receive", incoming });
+  }, []);
+
+  const connection = useNotificationPolling(credentials, handleIncoming);
+
   const deliver = useCallback(
     async (chat: Chat, messageId: string, text: string) => {
       try {
-        const { idMessage } = await sendMessage(credentials, phoneToChatId(chat.phone), text);
+        const { idMessage } = await sendMessage(credentials, recipientOf(chat), text);
         dispatch({
           type: "updateMessage",
           chatId: chat.id,
@@ -91,12 +102,13 @@ export function ChatProvider({ credentials, children }: ChatProviderProps) {
       credentials,
       chats: state.chats,
       activeChat: state.chats.find((chat) => chat.id === state.activeChatId) ?? null,
+      connection,
       createChat,
       selectChat,
       sendText,
       retry,
     }),
-    [credentials, state, createChat, selectChat, sendText, retry],
+    [credentials, state, connection, createChat, selectChat, sendText, retry],
   );
 
   return <ChatContext value={value}>{children}</ChatContext>;
